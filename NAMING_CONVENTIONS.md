@@ -1,4 +1,4 @@
-# Convention de nommage — Projet C
+# Convention de nommage - Projet de fin d'année
 
 ## Fichiers
 
