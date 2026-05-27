@@ -1,0 +1,18 @@
+@startuml
+
+struct sudoku_tile {
+    char value
+    char possible[9]
+}
+
+stereotype Sudoku_tile {
+    **subset
+}
+
+struct Affectation {
+    sudoku_tile *tile
+    char supposed
+    char value
+}
+
+@enduml
