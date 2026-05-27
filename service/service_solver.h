@@ -1,0 +1,8 @@
+//
+// Created by Xan Delayat on 27/05/2026.
+//
+
+#ifndef SUDOKUSOLVER_SERVICE_SOLVER_H
+#define SUDOKUSOLVER_SERVICE_SOLVER_H
+
+#endif //SUDOKUSOLVER_SERVICE_SOLVER_H
