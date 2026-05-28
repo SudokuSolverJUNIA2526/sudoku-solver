@@ -1,16 +1,16 @@
 @startuml
 
-struct sudoku_tile {
+struct SudokuTile {
     char value
     char possible[9]
 }
 
-stereotype Sudoku_tile {
+stereotype Sudoku_Tile {
     **subset
 }
 
 struct Affectation {
-    sudoku_tile *tile
+    SudokuTile *tile
     char supposed
     char value
 }

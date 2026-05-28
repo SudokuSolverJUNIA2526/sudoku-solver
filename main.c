@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include "entity/grid.h"
 
 int main(void) {
-    printf("Hello, World!\n");
+    initGrid();
+    dispFinal();
     return 0;
 }
