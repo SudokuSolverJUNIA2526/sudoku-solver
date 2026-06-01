@@ -5,4 +5,7 @@
 #ifndef SUDOKUSOLVER_GENERATOR_H
 #define SUDOKUSOLVER_GENERATOR_H
 
+#include "sudoku_types.h"
+
+
 #endif //SUDOKUSOLVER_GENERATOR_H

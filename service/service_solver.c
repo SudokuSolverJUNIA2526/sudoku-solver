@@ -3,3 +3,15 @@
 //
 
 #include "service_solver.h"
+
+char cleanLine(SudokuTiles *line) {
+
+}
+
+char solveNakedSinglesInLine(SudokuTiles *line) {
+
+}
+
+char solveHiddenSinglesInLine(SudokuTiles *line) {
+
+}
