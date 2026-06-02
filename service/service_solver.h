@@ -19,7 +19,7 @@ char cleanLine(SudokuTiles *line);
  * pour chaque case dont une seule valeur reste possible,
  *fixe cette valeur.
  */
-char solveNakedSinglesInLine(SudokuTiles *line);
+char solveNakedSingles(void);
 
 /**
  * pour chaque valeur v, si v

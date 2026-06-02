@@ -5,4 +5,12 @@
 #ifndef SUDOKUSOLVER_SUBSET_INTERNAL_H
 #define SUDOKUSOLVER_SUBSET_INTERNAL_H
 
+#include "grid.h"
+
+typedef struct Subset {
+    Subset line;
+    Subset col;
+    Subset sub_square;
+} SubsetGrid;
+
 #endif //SUDOKUSOLVER_SUBSET_INTERNAL_H
