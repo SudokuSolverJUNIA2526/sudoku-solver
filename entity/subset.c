@@ -4,7 +4,10 @@
 
 #include "subset.h"
 
+#include <stdio.h>
 #include <stdlib.h>
+
+Subset all_subset[27];
 
 // sous-ensemble correspondant à la ligne n
 Subset getLineSubset(int n) {
@@ -27,7 +30,7 @@ Subset getColSubset(int n) {
         // (n-1) -> numéro de colonne (0 <= n <= 8)
         // * i -> corresponcance valeurs de la ligne
         // + 9 -> index de la colonne
-        subset[i] = &grid[(n - 1) * i + 9];
+        subset[i] = &grid[i * 9 + (n - 1)];
     }
     return subset;
 }
@@ -50,81 +53,96 @@ Subset getSubsqSubset(int n) {
 // + 9 sous-carrés) et les mémorise dans une structure
 // dont vous justifierez le type
 void buildAllSubsets(void) {
-    SubsetGrid *subsets = malloc(sizeof(Subset*) * 9);
     for (int i = 0; i < 9; i++) {
-        subsets[i].col = getColSubset(i);
-        subsets[i].line = getLineSubset(i);
-        subsets[i].sub_square = getSubsqSubset(i);
+        all_subset[i]      = getLineSubset(i + 1);
+        all_subset[9  + i] = getColSubset(i + 1);
+        all_subset[18 + i] = getSubsqSubset(i + 1);
     }
-    free(subsets);
+}
+
+// nettoyage de la mémoire
+void freeAllSubsets(void) {
+    for (int i = 0; i < 9; i++) {
+        free(all_subset[i]);
+        all_subset[i] = NULL;
+    }
 }
 
 // versions généralisées de clean_line et solve_hidden_singles_in_line
 char cleanSubset(Subset s) {
-    int modificator = 0;
+    int modified = 0;
     for (int i = 0; i < 9; i++) {
-        if (s[i]->value != 0) {       // Check si tile value != 0
-            for (int j = 0; j < 9; j++) {
-                if (s[j]->value != 0) {
-                    //NA
-                } else {
-                    s[j]->possible[s[i]->value] = 0;
-                    modificator++;
-                }
+        if (s[i]->value == 0) continue; // case inconnue : rien à faire
+        int val = s[i]->value - 1;      // index sur 0 dans possible[]
+        for (int j = 0; j < 9; j++) {
+            if (i == j) continue;                  // même case : skip
+            if (s[j]->value != 0) continue;        // déjà connue : skip
+            if (s[j]->possible[val] != 0) {
+                s[j]->possible[val] = 0;
+                modified = 1;
             }
         }
     }
-    if (modificator != 0) return 1;
-    return 0;
+    return (char)modified;
 }
 
 // versions généralisées de clean_line et solve_hidden_singles_in_line
 char solveHiddenSinglesInSubset(Subset s) {
-    int possible_count = 0;
-    for (int i = 0; i < GRID_SIZE; i++) {
-        possible_count = 0;
-        for (int j = 0; j < 9; j++) {
-            if (s[i]->value != 0 && s[i]->possible[j+1] == 0) {
-                possible_count++;
+    int modified = 0;
+    for (int v = 1; v <= 9; v++) {          // pour chaque valeur v
+        int count = 0;
+        int last  = -1;
+        for (int i = 0; i < 9; i++) {
+            if (s[i]->value != 0) continue; // case déjà connue
+            if (s[i]->possible[v - 1] != 0) {
+                    count++;
+                    last = i;
             }
         }
-        if (possible_count == 8) {
-            for (int j = 0; j < 9; j++) {
-                if (s[i]->possible[j+1] != 0) {
-                    j++;
-                    s[i]->value = (char) j;
-                    s[i]->possible[j+1] = 0;
-                    j--;
-                }
-            }
+        if (count == 1) {                   // v possible dans 1 seule case
+                setTileValue(s[last], (char)v, 0);
+                modified = 1;
         }
     }
-    return 1;
+    return (char)modified;
 }
 
 // appliquent les fonctions
 // précédentes à l’ensemble des sous-ensembles.
 char cleanGrid(void) {
-    for (int i = 0; i < 9; i++) {
-        cleanSubset(getLineSubset(i));
-        cleanSubset(getColSubset(i));
-        cleanSubset(getSubsqSubset(i));
+    int modified = 0;
+    for (int i = 0; i < 27; i++) {
+        modified |= cleanSubset(all_subset[i]);
     }
-    return 1;
+    return (char)modified;
 }
 
 // appliquent les fonctions
 // précédentes à l’ensemble des sous-ensembles.
 char solveHiddenSingles(void) {
-    for (int i = 0; i < 9; i++) {
-        solveHiddenSinglesInSubset(getLineSubset(i));
-        solveHiddenSinglesInSubset(getColSubset(i));
-        solveHiddenSinglesInSubset(getSubsqSubset(i));
+    int modified = 0;
+    for (int i = 0; i < 27; i++) {
+        modified |= solveHiddenSinglesInSubset(all_subset[i]);
     }
-    return 1;
+    return (char)modified;
 }
 
 // affichage d’un sous-ensemble (format libre, à documenter)
 void dispSubset(Subset s) {
-
+    for (int i = 0; i < 9; i++) {
+        if (s[i]->value != 0) {
+            printf("%d", s[i]->value);
+        } else {
+            int first = 1;
+            for (int v = 0; v < 9; v++) {
+                if (s[i]->possible[v] != 0) {
+                    if (!first) printf(",");
+                    printf("%d", v + 1);
+                    first = 0;
+                }
+            }
+        }
+        if (i < 8) printf(" | ");
+    }
+    printf("\n");
 }

@@ -5,7 +5,8 @@
 #include "../sudoku-solver/entity/sudoku_types.h"
 #include "../sudoku-solver/repository/io.h"
 #include "../sudoku-solver/entity/grid.h"
- 
+#include "entity/subset.h"
+
 static int run    = 0;
 static int passed = 0;
 static int failed = 0;
@@ -123,6 +124,10 @@ static void testIoFile(void)
     ASSERT(res == 0, "saveGridToFile return ko if path NULL");
 }
 
+static void testSubset(void) {
+    printf("\n[TEST] subset\n");
+}
+
 int main(void)
 {
     printf("  Tests unitaires \n");
@@ -131,6 +136,16 @@ int main(void)
     testSetTileValue();
     testDisp();
     testIoFile();
+    initGrid();
+    setTileValue(&grid[0],  7, 0);
+    setTileValue(&grid[5],  3, 0);
+    setTileValue(&grid[9],  6, 0);
+    setTileValue(&grid[11], 2, 0);
+    dispFinal();
+    dispPossible();
+    buildAllSubsets();
+    cleanGrid();
+    dispSubset(getLineSubset(1));
 
     printf("  \nResults : %d/%d passed", passed, run);
     if (failed > 0) {
