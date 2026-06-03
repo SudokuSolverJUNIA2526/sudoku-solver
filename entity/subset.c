@@ -146,3 +146,66 @@ void dispSubset(Subset s) {
     }
     printf("\n");
 }
+
+static int countPossible(SudokuTiles *t) {
+    int count = 0;
+    for (int i = 0; i < 9; i++) {
+        count += t->possible[i];
+    }
+    return count;
+}
+
+static int samePossible(SudokuTiles *a, SudokuTiles *b) {
+    for (int i = 0; i < 9; i++) {
+        if (a->possible[i] != b->possible[i]) return 0;
+    }
+    return 1;
+}
+
+char solveNakedPairInSubset(Subset s) {
+    int modified = 0;
+    for (int i = 0; i < 9; i++) {
+
+        // Tile already solved
+        if (s[i]->value != 0) continue;
+        // Not a pair
+        if (countPossible(s[i]) != 2) continue;
+
+        // Iterate for the second value of the pair
+        for (int j = i + 1; j < 9; j++) {
+            // Tile already solved
+            if (s[j]->value != 0) continue;
+            // Not a pair
+            if (countPossible(s[j]) != 2) continue;
+            // Not the same possible as the first
+            if (!samePossible(s[i], s[j])) continue;
+
+            // We want to iterate every tile to make the pair's candidates impossible in the others
+            for (int k = 0; k < 9; k++) {
+
+                // Don't touch the pair
+                if (k == i ||k == j) continue;
+                // Don't touch the solved ones
+                if (s[k]->value != 0 ) continue;
+
+                for (int v = 0; v < 9; v++) {
+                    if (s[i]->possible[v]) {
+                        if (s[k]->possible[v]) {
+                            s[k]->possible[v] = 0;
+                            modified = 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return (char)modified;
+}
+
+char cleanNakedPairs(void) {
+    int modified = 0;
+    for (int i = 0; i < 27; i++) {
+        modified |= solveNakedPairInSubset(all_subset[i]);
+    }
+    return (char)modified;
+}

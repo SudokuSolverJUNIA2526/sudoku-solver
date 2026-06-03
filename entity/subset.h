@@ -17,5 +17,8 @@ char solveHiddenSinglesInSubset(Subset s);
 char cleanGrid(void);
 char solveHiddenSingles(void);
 void dispSubset(Subset s);
+char cleanNakedPairs(void);
+char cleanHiddenPairs(void);
+char solveNakedPairInSubset(Subset s);
 
 #endif //SUDOKUSOLVER_SUBSET_H
