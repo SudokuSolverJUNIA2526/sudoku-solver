@@ -5,4 +5,14 @@
 #ifndef SUDOKUSOLVER_GENERATOR_INTERNAL_H
 #define SUDOKUSOLVER_GENERATOR_INTERNAL_H
 
+typedef struct {
+    enum {
+        TRIVIAL,
+        BASIC,
+        INTERMEDIATE,
+        HARD,
+        EXPERT
+    };
+} difficulty_t;
+
 #endif //SUDOKUSOLVER_GENERATOR_INTERNAL_H

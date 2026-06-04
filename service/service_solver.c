@@ -117,3 +117,30 @@ char resolveGrid(void) {
     return 1;
 }
 
+char guessValue(void) {
+    char low_value = 0;
+    char high_value = 0;
+    // check dans les 81 cases de la grille
+    for (int i = 0; i < GRID_SIZE; i++) {
+        int possible_check = 0;
+        // check les 9 possiblités de chaque case
+        for (int j = 0; j < 9; j++) {
+            // si grille pas possible
+            if (grid[i].possible[j] != 0 && grid[i].value == 0) {
+                // possibilité + 1
+                possible_check++;
+                // assigner low_value tant que 1 possibilité trouvée
+                if (possible_check == 1) low_value = (char) (j+1);
+                if (possible_check == 2) high_value = (char) (j+1);
+                if (low_value < high_value) continue;
+                else low_value = high_value;
+                if (possible_check == 2 && j == 8) {
+                    setTileValue(&grid[i], low_value, 1);
+                    return 1;
+                }
+            }
+        }
+    }
+    //printf("No such type tiles");
+    return 0;
+}

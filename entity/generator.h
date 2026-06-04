@@ -6,6 +6,8 @@
 #define SUDOKUSOLVER_GENERATOR_H
 
 #include "sudoku_types.h"
+#include "generator-internal.h"
 
+char generateGrid(difficulty_t level, unsigned int seed);
 
 #endif //SUDOKUSOLVER_GENERATOR_H

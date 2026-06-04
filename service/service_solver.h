@@ -29,5 +29,6 @@ char solveNakedSingles(void);
  */
 char solveHiddenSinglesInLine(SudokuTiles *line);
 char resolveGrid(void);
+char guessValue(void);
 
 #endif //SUDOKUSOLVER_SERVICE_SOLVER_H

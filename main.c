@@ -137,21 +137,12 @@ int main(void)
     testSetTileValue();
     testDisp();
     testIoFile();
-    /*
-    initGrid();
 
-    setTileValue(&grid[0],  7, 0);
-    setTileValue(&grid[5],  3, 0);
-    setTileValue(&grid[9],  6, 0);
-    setTileValue(&grid[11], 2, 0);
-    */
     loadGridFromFile("sudoku_test_2.txt");
     dispPossible();
     buildAllSubsets();
     cleanGrid();
     dispSubset(getLineSubset(1));
-    //char c = saveGridToFile("sudoku_test_3.txt");
-    //printf("Result: %d\n", c);
     dispFinal();
     resolveGrid();
     dispFinal();

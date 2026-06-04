@@ -9,3 +9,7 @@
 #include <time.h>
 #include "stdlib.h"
 #include "../console/cli.h"
+
+char generateGrid(difficulty_t level, unsigned int seed) {
+    return 0;
+}
