@@ -56,9 +56,15 @@ void dispPossible(void) {
 }
 
 void setTileValue(SudokuTiles *t, char val, char supposed) {
+    int row = (int)(t - grid) / 9 + 1;
+    int col = (int)(t - grid) % 9 + 1;
+
     t->value = val;
-    for (int d = 0; d < 9; d++)
-        t->possible[d] = 0;
+    for (int d = 0; d < 9; d++) {
+        if (t->possible[d] != 0) {
+            t->possible[d] = 0;
+        }
+    }
     if (val >= 1 && val <= 9)
         t->possible[val - 1] = 1;
 
@@ -68,4 +74,21 @@ void setTileValue(SudokuTiles *t, char val, char supposed) {
         history[history_index].value    = val;
         history_index++;
     }
+}
+
+char isGridValid(void) {
+    int possible_check = 0;
+    // check dans les 81 cases de la grille
+    for (int i = 0; i < GRID_SIZE; i++) {
+        // remise à 0 du compteur de possiblité restante dans une case
+        possible_check = 0;
+        for (int j = 0; j < 9; j++) {
+            // si aucune possiblité pour valeur i et case de la valeur == 0, incrémenter le compteur
+            if (grid[i].possible[j] == 0 && grid[i].value == 0) possible_check++;
+            // si compteur à 9 (valeur à 0 et aucune possibilité -> impossible, return 0
+            if (possible_check == 9) return 0;
+        }
+    }
+    //printf("Valid grid\n");
+    return 1;
 }

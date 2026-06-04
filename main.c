@@ -145,7 +145,7 @@ int main(void)
     setTileValue(&grid[9],  6, 0);
     setTileValue(&grid[11], 2, 0);
     */
-    loadGridFromFile("sudoku_test_3.txt");
+    loadGridFromFile("sudoku_test_2.txt");
     dispPossible();
     buildAllSubsets();
     cleanGrid();
@@ -155,6 +155,7 @@ int main(void)
     dispFinal();
     resolveGrid();
     dispFinal();
+    isGridValid();
 
     printf("  \nResults : %d/%d passed", passed, run);
     if (failed > 0) {

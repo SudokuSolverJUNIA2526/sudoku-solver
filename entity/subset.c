@@ -42,9 +42,9 @@ Subset getSubsqSubset(int n) {
 
 /*
  * Stocke 27 subsets dans all_subset[27] :
- *   [0..8]   lignes 1..9
- *   [9..17]  colonnes 1..9
- *   [18..26] sous-carrés 1..9
+ *   [0 à 8]   lignes 1 à 9
+ *   [9 à 17]  colonnes 1 à 9
+ *   [18 à 26] sous-carrés 1 à 9
  * Type choisi : tableau plat de taille fixe — suffisant, pas besoin
  * d'allocation dynamique pour le conteneur.
  */
@@ -63,13 +63,10 @@ void freeAllSubsets(void) {
     }
 }
 
-/* ------------------------------------------------------------------ */
-/* dispSubset                                                           */
-/* ------------------------------------------------------------------ */
 
 /*
  * Format : valeur connue affichée directement,
- * case inconnue affichée comme [1,3,5,...] (valeurs encore possibles).
+ * case inconnue affichée comme [1,2,3,...] (valeurs encore possibles).
  */
 void dispSubset(Subset s) {
     for (int i = 0; i < 9; i++) {
@@ -92,19 +89,19 @@ void dispSubset(Subset s) {
     printf("\n");
 }
 
-/* ------------------------------------------------------------------ */
-/* cleanSubset                                                          */
-/* ------------------------------------------------------------------ */
-
 char cleanSubset(Subset s) {
     int modified = 0;
     for (int i = 0; i < 9; i++) {
         if (s[i]->value == 0) continue;
-        int val = s[i]->value - 1; /* index 0-based */
+        int val = s[i]->value - 1;
         for (int j = 0; j < 9; j++) {
             if (i == j) continue;
             if (s[j]->value != 0) continue;
             if (s[j]->possible[val] != 0) {
+                int row = (int)(s[j] - grid) / 9 + 1;
+                int col = (int)(s[j] - grid) % 9 + 1;
+                int rowI = (int)(s[i] - grid) / 9 + 1;
+                int colI = (int)(s[i] - grid) % 9 + 1;
                 s[j]->possible[val] = 0;
                 modified = 1;
             }
@@ -112,10 +109,6 @@ char cleanSubset(Subset s) {
     }
     return (char)modified;
 }
-
-/* ------------------------------------------------------------------ */
-/* solveHiddenSinglesInSubset                                          */
-/* ------------------------------------------------------------------ */
 
 char solveHiddenSinglesInSubset(Subset s) {
     int modified = 0;
@@ -126,16 +119,14 @@ char solveHiddenSinglesInSubset(Subset s) {
             if (s[i]->possible[v-1] != 0) { count++; last = i; }
         }
         if (count == 1) {
+            int row = (int)(s[last] - grid) / 9 + 1;
+            int col = (int)(s[last] - grid) % 9 + 1;
             setTileValue(s[last], (char)v, 0);
             modified = 1;
         }
     }
     return (char)modified;
 }
-
-/* ------------------------------------------------------------------ */
-/* cleanGrid / solveHiddenSingles                                      */
-/* ------------------------------------------------------------------ */
 
 char cleanGrid(void) {
     int modified = 0;
@@ -151,10 +142,6 @@ char solveHiddenSingles(void) {
     return (char)modified;
 }
 
-/* ------------------------------------------------------------------ */
-/* Utilitaire interne                                                   */
-/* ------------------------------------------------------------------ */
-
 static int countPossible(SudokuTiles *t) {
     int n = 0;
     for (int v = 0; v < 9; v++)
@@ -162,22 +149,18 @@ static int countPossible(SudokuTiles *t) {
     return n;
 }
 
-/* ------------------------------------------------------------------ */
-/* Naked pairs                                                          */
-/* ------------------------------------------------------------------ */
-
 static char cleanNakedPairsInSubset(Subset s) {
     int modified = 0;
     for (int i = 0; i < 9; i++) {
         if (s[i]->value != 0 || countPossible(s[i]) != 2) continue;
         for (int j = i+1; j < 9; j++) {
             if (s[j]->value != 0 || countPossible(s[j]) != 2) continue;
-            /* Même paire ? */
+            // Même paire
             int same = 1;
             for (int v = 0; v < 9; v++)
                 if (s[i]->possible[v] != s[j]->possible[v]) { same = 0; break; }
             if (!same) continue;
-            /* Éliminer ces 2 valeurs des autres cases */
+            // Éliminer ces 2 valeurs des autres cases
             for (int k = 0; k < 9; k++) {
                 if (k == i || k == j || s[k]->value != 0) continue;
                 for (int v = 0; v < 9; v++) {
@@ -191,10 +174,6 @@ static char cleanNakedPairsInSubset(Subset s) {
     }
     return (char)modified;
 }
-
-/* ------------------------------------------------------------------ */
-/* Hidden pairs                                                         */
-/* ------------------------------------------------------------------ */
 
 static char cleanHiddenPairsInSubset(Subset s) {
     int modified = 0;
@@ -219,10 +198,6 @@ static char cleanHiddenPairsInSubset(Subset s) {
     }
     return (char)modified;
 }
-
-/* ------------------------------------------------------------------ */
-/* Naked triples                                                        */
-/* ------------------------------------------------------------------ */
 
 static char cleanNakedTriplesInSubset(Subset s) {
     int modified = 0;
@@ -252,10 +227,6 @@ static char cleanNakedTriplesInSubset(Subset s) {
     }
     return (char)modified;
 }
-
-/* ------------------------------------------------------------------ */
-/* Hidden triples                                                       */
-/* ------------------------------------------------------------------ */
 
 static char cleanHiddenTriplesInSubset(Subset s) {
     int modified = 0;
@@ -306,16 +277,3 @@ char cleanHiddenTriples(void) {
     return (char)m;
 }
 
-char fixSubsets(Subset s) {
-    int modified = 0;
-    for (int i = 0; i < 27; i++) {
-        for (int k = 0; k < 9; k++) {
-            for (int j = 0; j < 9; j++) {
-            if (s[j]->value == s[k]->value) {
-
-                }
-            }
-        }
-    }
-    return (char)modified;
-}
