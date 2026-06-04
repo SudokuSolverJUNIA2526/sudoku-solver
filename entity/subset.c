@@ -149,25 +149,47 @@ static int countPossible(SudokuTiles *t) {
     return n;
 }
 
+static int possibleToMask(SudokuTiles *t) {
+    int mask = 0;
+    for (int v = 0; v < 9; v++)
+        if (t->possible[v] != 0) mask |= (1 << v);
+    return mask;
+}
+
+static int bitCount(int mask) {
+    return __builtin_popcount(mask);
+}
+
+static void maskToPossible(SudokuTiles *t, int mask) {
+    for (int i = 0; i < 9; i++) {
+        t->possible[i] = (mask >> i) & 1;
+    }
+}
+
 static char cleanNakedPairsInSubset(Subset s) {
     int modified = 0;
     for (int i = 0; i < 9; i++) {
-        if (s[i]->value != 0 || countPossible(s[i]) != 2) continue;
+
+        if (s[i]->value != 0 ) continue;
+        int maskI = possibleToMask(s[i]);
+        if (bitCount(maskI) != 2) continue;
         for (int j = i+1; j < 9; j++) {
-            if (s[j]->value != 0 || countPossible(s[j]) != 2) continue;
-            // Même paire
-            int same = 1;
-            for (int v = 0; v < 9; v++)
-                if (s[i]->possible[v] != s[j]->possible[v]) { same = 0; break; }
-            if (!same) continue;
+            if (s[j]->value != 0) continue;
+            int maskJ = possibleToMask(s[j]);
+            if (bitCount(maskJ) != 2) continue;
+            // Paire possible
+            if (maskI != maskJ) continue;
             // Éliminer ces 2 valeurs des autres cases
             for (int k = 0; k < 9; k++) {
-                if (k == i || k == j || s[k]->value != 0) continue;
-                for (int v = 0; v < 9; v++) {
-                    if (s[i]->possible[v] != 0 && s[k]->possible[v] != 0) {
-                        s[k]->possible[v] = 0;
-                        modified = 1;
-                    }
+                if (k == i || k == j) continue;
+                if (s[k]->value != 0) continue;
+
+                int before = possibleToMask(s[k]);
+                int after = before & ~maskI;
+
+                if (before != after) {
+                    modified = 1;
+                    maskToPossible(s[k], after);
                 }
             }
         }
@@ -175,24 +197,50 @@ static char cleanNakedPairsInSubset(Subset s) {
     return (char)modified;
 }
 
+static int valuePositions(Subset s, int v) {
+    int pos = 0;
+
+    for (int i = 0; i < 9; i++) {
+        if (s[i]->value != 0) continue;
+
+        int mask = possibleToMask(s[i]);
+        if (mask & (1 << (v - 1))) {
+            pos |= (1 << i);
+        }
+    }
+
+    return pos;
+}
+
 static char cleanHiddenPairsInSubset(Subset s) {
     int modified = 0;
-    for (int v1 = 0; v1 < 9; v1++) {
-        for (int v2 = v1+1; v2 < 9; v2++) {
-            int pos[9], count = 0;
+
+    for (int a = 1; a <= 9; a++) {
+        int posA = valuePositions(s, a);
+
+        for (int b = a + 1; b <= 9; b++) {
+            int posB = valuePositions(s, b);
+
+            int common = posA & posB;
+
+            if (bitCount(common) != 2) continue;
+
+            // hidden pair found in exactly 2 cells
+
+            int pairMask = (1 << (a - 1)) | (1 << (b - 1));
+
             for (int i = 0; i < 9; i++) {
                 if (s[i]->value != 0) continue;
-                if (s[i]->possible[v1] || s[i]->possible[v2])
-                    pos[count++] = i;
-            }
-            if (count != 2) continue;
-            int a = pos[0], b = pos[1];
-            if (!s[a]->possible[v1] || !s[a]->possible[v2]) continue;
-            if (!s[b]->possible[v1] || !s[b]->possible[v2]) continue;
-            for (int v = 0; v < 9; v++) {
-                if (v == v1 || v == v2) continue;
-                if (s[a]->possible[v]) { s[a]->possible[v] = 0; modified = 1; }
-                if (s[b]->possible[v]) { s[b]->possible[v] = 0; modified = 1; }
+                if (!(common & (1 << i))) continue;
+
+
+                int before = possibleToMask(s[i]);
+                int after  = before & pairMask;
+
+                if (before != after) {
+                    maskToPossible(s[i], after);
+                    modified = 1;
+                }
             }
         }
     }
@@ -201,58 +249,90 @@ static char cleanHiddenPairsInSubset(Subset s) {
 
 static char cleanNakedTriplesInSubset(Subset s) {
     int modified = 0;
+
     for (int i = 0; i < 9; i++) {
         if (s[i]->value != 0) continue;
-        for (int j = i+1; j < 9; j++) {
+
+        int maskI = possibleToMask(s[i]);
+        if (bitCount(maskI) != 3) continue;
+
+        for (int j = i + 1; j < 9; j++) {
             if (s[j]->value != 0) continue;
-            for (int k = j+1; k < 9; k++) {
+
+            int maskJ = possibleToMask(s[j]);
+            int maskIJ = maskI | maskJ;
+
+            if (bitCount(maskIJ) != 3) continue;
+
+            for (int k = j + 1; k < 9; k++) {
                 if (s[k]->value != 0) continue;
-                int united[9] = {0}, count = 0;
-                for (int v = 0; v < 9; v++) {
-                    if (s[i]->possible[v] || s[j]->possible[v] || s[k]->possible[v]) {
-                        united[v] = 1; count++;
-                    }
-                }
-                if (count != 3) continue;
-                for (int m = 0; m < 9; m++) {
-                    if (m == i || m == j || m == k || s[m]->value != 0) continue;
-                    for (int v = 0; v < 9; v++) {
-                        if (united[v] && s[m]->possible[v]) {
-                            s[m]->possible[v] = 0; modified = 1;
-                        }
+
+                int mk = possibleToMask(s[k]);
+                int unionMask = maskIJ | mk;
+
+                if (bitCount(unionMask) != 3) continue;
+
+                int tripletMask = unionMask;
+
+                for (int x = 0; x < 9; x++) {
+                    if (x == i || x == j || x == k) continue;
+                    if (s[x]->value != 0) continue;
+
+                    int before = possibleToMask(s[x]);
+                    int after  = before & ~tripletMask;
+
+                    if (before != after) {
+                        maskToPossible(s[x], after);
+                        modified = 1;
                     }
                 }
             }
         }
     }
+
     return (char)modified;
 }
 
 static char cleanHiddenTriplesInSubset(Subset s) {
     int modified = 0;
-    for (int v1 = 0; v1 < 9; v1++) {
-        for (int v2 = v1+1; v2 < 9; v2++) {
-            for (int v3 = v2+1; v3 < 9; v3++) {
-                int pos[9], count = 0;
+
+    for (int a = 1; a <= 9; a++) {
+        int posA = valuePositions(s, a);
+
+        for (int b = a + 1; b <= 9; b++) {
+            int posB = valuePositions(s, b);
+
+            for (int c = b + 1; c <= 9; c++) {
+                int posC = valuePositions(s, c);
+
+                int unionPos = posA | posB | posC;
+
+                if (bitCount(unionPos) != 3) continue;
+
+                // hidden triplet found in exactly 3 cells
+
+                int tripletMask =
+                    (1 << (a - 1)) |
+                    (1 << (b - 1)) |
+                    (1 << (c - 1));
+
                 for (int i = 0; i < 9; i++) {
+
                     if (s[i]->value != 0) continue;
-                    if (s[i]->possible[v1] || s[i]->possible[v2] || s[i]->possible[v3])
-                        pos[count++] = i;
-                }
-                if (count != 3) continue;
-                int a = pos[0], b = pos[1], c = pos[2];
-                if (!(s[a]->possible[v1]||s[b]->possible[v1]||s[c]->possible[v1])) continue;
-                if (!(s[a]->possible[v2]||s[b]->possible[v2]||s[c]->possible[v2])) continue;
-                if (!(s[a]->possible[v3]||s[b]->possible[v3]||s[c]->possible[v3])) continue;
-                for (int v = 0; v < 9; v++) {
-                    if (v == v1 || v == v2 || v == v3) continue;
-                    if (s[a]->possible[v]) { s[a]->possible[v] = 0; modified = 1; }
-                    if (s[b]->possible[v]) { s[b]->possible[v] = 0; modified = 1; }
-                    if (s[c]->possible[v]) { s[c]->possible[v] = 0; modified = 1; }
+                    if (!(unionPos & (1 << i))) continue;
+
+                    int before = possibleToMask(s[i]);
+                    int after  = before & tripletMask;
+
+                    if (before != after) {
+                        maskToPossible(s[i], after);
+                        modified = 1;
+                    }
                 }
             }
         }
     }
+
     return (char)modified;
 }
 
