@@ -54,7 +54,6 @@ package console {
     file "cli-internal.h"
 
     "cli.c" -[dotted]-> "cli-internal.h" : include
-    "cli.c" -[dotted]-> "cli.h" : include
     "cli-internal.h" -[dotted]-> "cli.h" : include
 }
 
