@@ -5,7 +5,10 @@
 #ifndef SUDOKUSOLVER_SUBSET_INTERNAL_H
 #define SUDOKUSOLVER_SUBSET_INTERNAL_H
 
-#include "grid.h"
+#include "sudoku_types.h"
+
+// pour contenir tout les subsets
+extern Subset all_subset[27];
 
 typedef struct Subset {
     Subset line;

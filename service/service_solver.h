@@ -6,6 +6,7 @@
 #define SUDOKUSOLVER_SERVICE_SOLVER_H
 
 #include "../entity/sudoku_types.h"
+#include "../entity/subset.h"
 
 /**
  *
@@ -27,5 +28,6 @@ char solveNakedSingles(void);
  * pour valeur.
  */
 char solveHiddenSinglesInLine(SudokuTiles *line);
+char resolveGrid(void);
 
 #endif //SUDOKUSOLVER_SERVICE_SOLVER_H

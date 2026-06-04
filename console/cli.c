@@ -15,13 +15,17 @@ extern SudokuTiles grid[81];
 extern Affectation history[81];
 extern int history_index;
 
-    static void printHelp(const char *prog)
+static void printHelp(const char *prog)
 {
     fprintf(stderr,
             "Usage: %s [-h] [-l FILE] [-i]\n"
-            "  -h, --help          Display this help interface\n"
-            "  -l, --load FILE     Load and display a grid from FILE\n"
-            "  -i, --interactive   Input a grid\n",
+            "  -h, --help            Display this help interface\n"
+            "  -l, --load FILE       Load and display a grid from FILE\n"
+            "  -g  --generate LEVEL  Generate a grid with the difficulty you wish\n"
+            "  -s  --seed N          Random grid generator's seed\n"
+            "  -v  --verbose         Detailed track of the resolution\n"
+            "  -b  --benchmark       Execute benchmark\n"
+            "  -i, --interactive     Input a grid\n",
             prog);
 }
 
@@ -62,6 +66,5 @@ int cli(int argc, char *argv[])
                        return 1;
                    }
     }
-
     return 0;
 }
