@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "subset.h"
+
 SudokuTiles grid[GRID_SIZE];
 Affectation history[HISTORY_SIZE];
 int         history_index = 0;
@@ -56,9 +58,6 @@ void dispPossible(void) {
 }
 
 void setTileValue(SudokuTiles *t, char val, char supposed) {
-    int row = (int)(t - grid) / 9 + 1;
-    int col = (int)(t - grid) % 9 + 1;
-
     t->value = val;
     for (int d = 0; d < 9; d++) {
         if (t->possible[d] != 0) {
@@ -91,4 +90,44 @@ char isGridValid(void) {
     }
     //printf("Valid grid\n");
     return 1;
+}
+
+void backPlay(void) {
+    // Remonte l'historique à l'envers jusqu'à la première supposition
+    while (history_index > 0) {
+        history_index--;
+        Affectation *hist = &history[history_index];
+
+        if (hist->supposed == 0) {
+            // Déduction : efface simplement la case
+            hist->tile->value = 0;
+            for (int d = 0; d < 9; d++)
+                hist->tile->possible[d] = 1;
+
+        } else {
+            // supposition fausse trouvée
+            SudokuTiles *t = hist->tile;
+            char bad_val   = hist->value;
+
+            // efface la case supposée
+            t->value = 0;
+            for (int d = 0; d < 9; d++)
+                t->possible[d] = 1;
+
+            // réinitialise les possibilités de toutes les cases inconnues
+            for (int i = 0; i < GRID_SIZE; i++) {
+                if (grid[i].value != 0) continue;
+                for (int d = 0; d < 9; d++)
+                    grid[i].possible[d] = 1;
+            }
+
+            // reconstruit les possibilités par déduction
+            cleanGrid();
+
+            // marque la valeur supposée comme impossible
+            t->possible[bad_val - 1] = 0;
+
+            return;
+        }
+    }
 }

@@ -21,6 +21,7 @@ void dispPossible(void);            // display 9 grids, one per possible value: 
 void setTileValue(SudokuTiles *tile, char val, char supposed);
 
 char isGridValid(void);
+void back_play(void);
 
 extern SudokuTiles grid[GRID_SIZE];
 extern Affectation history[HISTORY_SIZE];
