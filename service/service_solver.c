@@ -11,9 +11,10 @@
  */
 char cleanLine(SudokuTiles *line) {
     int modified = 0;
+    // balayer la ligne
     for (int i = 0; i < 9; i++) {
         if (line[i].value == 0) continue;
-        int val = line[i].value - 1;  /* index 0-based */
+        int val = line[i].value - 1;  // index 0-based
         for (int j = 0; j < 9; j++) {
             if (i == j) continue;
             if (line[j].value != 0) continue;
@@ -50,17 +51,20 @@ char solveNakedSingles(void) {
 }
 
 /*
- * Pour chaque valeur v (1..9), si v n'est possible que dans une unique
+ * Pour chaque valeur v (1 à 9), si v n'est possible que dans une unique
  * case inconnue de la ligne, cette case prend v.
  */
 char solveHiddenSinglesInLine(SudokuTiles *line) {
     int modified = 0;
+    // chercher sur la ligne
     for (int v = 1; v <= 9; v++) {
         int count = 0, last = -1;
+        // balayer les valeurs à l'index v de la ligne
         for (int i = 0; i < 9; i++) {
             if (line[i].value != 0) continue;
             if (line[i].possible[v-1] != 0) { count++; last = i; }
         }
+        // si une seule case == 0 alors setTileValue à l'index v de la ligne
         if (count == 1) {
             setTileValue(&line[last], (char)v, 0);
             modified = 1;

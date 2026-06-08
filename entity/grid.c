@@ -8,34 +8,50 @@ SudokuTiles grid[GRID_SIZE];
 Affectation history[HISTORY_SIZE];
 int         history_index = 0;
 
+// remet la grille à zéro : toutes les cases sont inconnues et toutes les valeurs sont possibles
+// réinitialise aussi l'historique des affectations
 void initGrid(void) {
     for (int k = 0; k < GRID_SIZE; k++) {
         grid[k].value = 0;
+        // toutes les valeurs 1 à 9 sont marquées comme possibles
         for (int d = 0; d < 9; d++)
             grid[k].possible[d] = 1;
     }
+    // remet le curseur de l'historique au début
     history_index = 0;
     memset(history, 0, sizeof(history));
 }
 
+// affiche une ligne de séparation horizontale entre les sous-carrés
 static void printHSep(void) {
     printf("+-------+-------+-------+\n");
 }
 
+// affiche la grille avec uniquement les valeurs certaines
+// les cases inconnues apparaissent comme des espaces vides
+// les séparations entre sous-carrés sont clairement visibles
 void dispFinal(void) {
     printHSep();
     for (int i = 1; i <= 9; i++) {
         for (int j = 1; j <= 9; j++) {
+            // séparateur vertical au début de chaque groupe de 3 colonnes
             if (j == 1 || j == 4 || j == 7) printf("| ");
             SudokuTiles *t = &grid[(i-1)*9 + (j-1)];
             if (t->value != 0) printf("%c ", '0' + t->value);
             else               printf("  ");
         }
         printf("|\n");
+        // séparateur horizontal après chaque groupe de 3 lignes
         if (i == 3 || i == 6 || i == 9) printHSep();
     }
 }
 
+// affiche 9 grilles superposées, une par chiffre de 1 à 9
+// pour chaque case :
+//   - la valeur si elle est connue et vaut d
+//   - un point si la case est connue mais vaut autre chose
+//   - un + si la case est inconnue et d est encore possible
+//   - un espace si la case est inconnue et d est impossible
 void dispPossible(void) {
     for (int d = 1; d <= 9; d++) {
         printf("Possibilities for: %d\n", d);
@@ -45,8 +61,10 @@ void dispPossible(void) {
                 if (j == 1 || j == 4 || j == 7) printf("| ");
                 SudokuTiles *t = &grid[(i-1)*9 + (j-1)];
                 if (t->value != 0) {
+                    // affiche d si c'est la bonne valeur, sinon un point
                     printf("%c ", t->value == (char)d ? '0'+d : '.');
                 } else {
+                    // affiche + si d est encore possible, sinon un espace
                     printf("%c ", t->possible[d-1] != 0 ? '+' : ' ');
                 }
             }
@@ -57,16 +75,22 @@ void dispPossible(void) {
     }
 }
 
+// fixe la valeur d'une case et met à jour ses possibilités en conséquence
+// enregistre l'opération dans l'historique pour pouvoir revenir en arrière
+// supposed vaut 1 si c'est une supposition, 0 si c'est une déduction certaine
 void setTileValue(SudokuTiles *t, char val, char supposed) {
     t->value = val;
+    // retire toutes les possibilités de la case
     for (int d = 0; d < 9; d++) {
         if (t->possible[d] != 0) {
             t->possible[d] = 0;
         }
     }
+    // remet uniquement la valeur fixée comme possible
     if (val >= 1 && val <= 9)
         t->possible[val - 1] = 1;
 
+    // enregistre l'affectation dans l'historique tant qu'il reste de la place
     if (history_index < HISTORY_SIZE) {
         history[history_index].tile     = t;
         history[history_index].supposed = supposed;
