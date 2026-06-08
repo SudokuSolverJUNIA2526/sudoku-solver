@@ -5,6 +5,7 @@
 #include "../sudoku-solver/entity/sudoku_types.h"
 #include "../sudoku-solver/repository/io.h"
 #include "../sudoku-solver/entity/grid.h"
+#include "entity/generator.h"
 #include "entity/subset.h"
 #include "service/service_solver.h"
 

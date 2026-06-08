@@ -27,13 +27,13 @@ typedef struct {
 } Affectation;
 
 typedef struct {
-    enum {
+    enum Difficulty{
         TRIVIAL,
         BASIC,
         INTERMEDIATE,
         HARD,
         EXPERT
-    };
+    } Difficulty;
 } difficulty_t;
 
 #endif //SUDOKUSOLVER_SUDOKU_TYPES_H
