@@ -115,6 +115,15 @@ char cleanSubset(Subset s) {
     return (char)modified;
 }
 
+// applique solveHiddenSinglesInSubset sur les 27 sous-ensembles
+// retourne 1 si au moins une valeur a été fixée
+char solveHiddenSingles(void) {
+    int modified = 0;
+    for (int i = 0; i < 27; i++)
+        modified |= solveHiddenSinglesInSubset(all_subset[i]);
+    return (char)modified;
+}
+
 // si une valeur n'est possible que dans une seule case inconnue du sous-ensemble,
 // alors cette case prend cette valeur (hidden single)
 // retourne 1 si au moins une valeur a été fixée
@@ -144,15 +153,6 @@ char cleanGrid(void) {
     int modified = 0;
     for (int i = 0; i < 27; i++)
         modified |= cleanSubset(all_subset[i]);
-    return (char)modified;
-}
-
-// applique solveHiddenSinglesInSubset sur les 27 sous-ensembles
-// retourne 1 si au moins une valeur a été fixée
-char solveHiddenSingles(void) {
-    int modified = 0;
-    for (int i = 0; i < 27; i++)
-        modified |= solveHiddenSinglesInSubset(all_subset[i]);
     return (char)modified;
 }
 

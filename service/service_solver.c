@@ -14,7 +14,7 @@ char cleanLine(SudokuTiles *line) {
     // balayer la ligne
     for (int i = 0; i < 9; i++) {
         if (line[i].value == 0) continue;
-        int val = line[i].value - 1;  // index 0-based
+        int val = line[i].value - 1;  // index 0 based
         for (int j = 0; j < 9; j++) {
             if (i == j) continue;
             if (line[j].value != 0) continue;
@@ -37,9 +37,11 @@ char solveNakedSingles(void) {
         if (grid[i].value != 0) continue; // case déjà connue
         int row = i / 9 + 1, col = i % 9 + 1;
         int count = 0, last = -1;
+        // si possible à index i est à true
         for (int v = 0; v < 9; v++) {
             if (grid[i].possible[v] != 0) { count++; last = v; }
         }
+        // si 1 seule case possible affecter une valeur automatiquement
         if (count == 1) {
             setTileValue(&grid[i], (char)(last + 1), 0);
             cleanGrid();
@@ -49,7 +51,6 @@ char solveNakedSingles(void) {
     }
     return (char)modified;
 }
-
 /*
  * Pour chaque valeur v (1 à 9), si v n'est possible que dans une unique
  * case inconnue de la ligne, cette case prend v.
@@ -129,7 +130,7 @@ char guessValue(void) {
         int possible_check = 0;
         // check les 9 possiblités de chaque case
         for (int j = 0; j < 9; j++) {
-            // si grille pas possible
+            // si valeur pas possible
             if (grid[i].possible[j] != 0 && grid[i].value == 0) {
                 // possibilité + 1
                 possible_check++;

@@ -36,5 +36,19 @@ char generateGrid(difficulty_t level, unsigned int seed) {
             setTileValue(&grid[(i+1)*9 + j], (char)src, 0);
         }
     }
+
+    if (level.difficulty < 5)
+        level.difficulty = 5;
+    for (int i = 0; i < level.difficulty * 9 + 15; i++) {
+        int index_rm = 0;
+        srand(time(NULL));
+        // cherche une case encore remplie
+        while (grid[index_rm].value == 0)
+            index_rm = rand() % 81;
+
+        grid[index_rm].value = 0;
+        for (int d = 0; d < 9; d++)
+            grid[index_rm].possible[d] = 1;
+    }
     return 1;
 }

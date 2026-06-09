@@ -1,18 +1,67 @@
 @startuml
 
-struct sudoku_tile {
+struct SudokuTiles {
     char value
     char possible[9]
 }
 
-stereotype Sudoku_tile {
-    **subset
-}
+' stereotype **Subset
 
 struct Affectation {
-    sudoku_tile *tile
+    SudokuTiles *tile
     char supposed
     char value
+}
+
+struct Grid {
+    + initGrid()
+    + dispFinal()
+    + dispPossible()
+    + setTileValue()
+    + isGridValid()
+    + backPlay()
+}
+
+Grid *-- "81  " SudokuTiles : grid
+Grid *-- "*" Affectation : history
+
+Affectation -[dotted]-> SudokuTiles
+
+struct SubsetGrid {
+    line : Subset
+    col : Subset
+    sub_square : Subset
+}
+
+struct SubsetSolver {
+    + getLineSubset(n)
+    + getColSubset(n)
+    + getSubsqSubset(n)
+    + buildAllSubsets()
+    + cleanSubset(s)
+    + solveHiddenSinglesInSubset(s)
+    + cleanGrid()
+    + solveHiddenSingles()
+    + cleanNakedPairs()
+    + cleanHiddenPairs()
+    + cleanNakedTriples()
+    + cleanHiddenTriples()
+    + fixSubsets(s)
+    + dispSubset(s)
+    + freeAllSubsets()
+}
+
+SubsetSolver -[dotted]-> SubsetGrid
+
+SubsetGrid -[dotted]->  SudokuTiles
+
+struct difficulty_t {
+    enum Difficulty
+    TRIVIAL
+    BASIC
+    INTERMEDIATE
+    HARD
+    EXPERT
 }
 
 @enduml

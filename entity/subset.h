@@ -14,11 +14,9 @@ void buildAllSubsets(void);
 char cleanSubset(Subset s);
 char solveHiddenSinglesInSubset(Subset s);
 char cleanGrid(void);
+char solveHiddenSingles(void);
 void dispSubset(Subset s);
 void freeAllSubsets(void);
-
-char solveHiddenSingles(void);
-
 char cleanNakedPairs(void);
 char cleanHiddenPairs(void);
 char cleanNakedTriples(void);

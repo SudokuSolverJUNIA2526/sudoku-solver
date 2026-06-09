@@ -22,16 +22,11 @@ void initGrid(void) {
     memset(history, 0, sizeof(history));
 }
 
-// affiche une ligne de séparation horizontale entre les sous-carrés
-static void printHSep(void) {
-    printf("+-------+-------+-------+\n");
-}
-
 // affiche la grille avec uniquement les valeurs certaines
 // les cases inconnues apparaissent comme des espaces vides
 // les séparations entre sous-carrés sont clairement visibles
 void dispFinal(void) {
-    printHSep();
+    printf("+-------+-------+-------+\n");
     for (int i = 1; i <= 9; i++) {
         for (int j = 1; j <= 9; j++) {
             // séparateur vertical au début de chaque groupe de 3 colonnes
@@ -42,7 +37,7 @@ void dispFinal(void) {
         }
         printf("|\n");
         // séparateur horizontal après chaque groupe de 3 lignes
-        if (i == 3 || i == 6 || i == 9) printHSep();
+        if (i == 3 || i == 6 || i == 9) printf("+-------+-------+-------+\n");;
     }
 }
 
@@ -55,7 +50,7 @@ void dispFinal(void) {
 void dispPossible(void) {
     for (int d = 1; d <= 9; d++) {
         printf("Possibilities for: %d\n", d);
-        printHSep();
+        printf("+-------+-------+-------+\n");
         for (int i = 1; i <= 9; i++) {
             for (int j = 1; j <= 9; j++) {
                 if (j == 1 || j == 4 || j == 7) printf("| ");
@@ -69,7 +64,7 @@ void dispPossible(void) {
                 }
             }
             printf("|\n");
-            if (i == 3 || i == 6 || i == 9) printHSep();
+            if (i == 3 || i == 6 || i == 9) printf("+-------+-------+-------+\n");;
         }
         printf("\n");
     }
@@ -123,7 +118,7 @@ void backPlay(void) {
         Affectation *hist = &history[history_index];
 
         if (hist->supposed == 0) {
-            // Déduction : efface simplement la case
+            // déduction : efface simplement la case
             hist->tile->value = 0;
             for (int d = 0; d < 9; d++)
                 hist->tile->possible[d] = 1;

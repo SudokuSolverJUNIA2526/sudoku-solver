@@ -134,12 +134,18 @@ int main(void)
 {
     printf("  Tests unitaires \n");
 
+    /*
     testInitGrid();
     testSetTileValue();
     testDisp();
-    testIoFile();
+    testIoFile(); */
 
-    loadGridFromFile("sudoku_test_2.txt");
+    difficulty_t d;
+    d.difficulty = 5;
+    generateGrid(d, 1);
+    dispFinal();
+
+    /*
     dispPossible();
     buildAllSubsets();
     cleanGrid();
@@ -147,7 +153,7 @@ int main(void)
     dispFinal();
     resolveGrid();
     dispFinal();
-    isGridValid();
+    isGridValid(); */
 
     printf("  \nResults : %d/%d passed", passed, run);
     if (failed > 0) {
