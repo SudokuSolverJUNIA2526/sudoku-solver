@@ -1,18 +1,25 @@
 @startuml
 
-struct sudoku_tile {
+struct SudokuTiles {
     char value
     char possible[9]
 }
 
-stereotype Sudoku_tile {
-    **subset
-}
+stereotype **Subset
 
 struct Affectation {
-    sudoku_tile *tile
+    SudokuTiles *tile
     char supposed
     char value
+}
+
+struct difficulty_t {
+    enum Difficulty
+    TRIVIAL
+    BASIC
+    INTERMEDIATE
+    HARD
+    EXPERT
 }
 
 @enduml
