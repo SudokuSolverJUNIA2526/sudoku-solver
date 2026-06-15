@@ -8,7 +8,12 @@
 #include "io.h"
 #include "../entity/grid.h"
 
-static void printHelp(const char *prog);
-int cli(int argc, char *argv[]);
+static void printHelp(const char *cmd);
+char cli();
+static void generateLevelHelp();
+unsigned short seedGen(unsigned short seed);
+char verbose();
+char benchmark();
+char interactive();
 
 #endif //SUDOKUSOLVER_CLI_H

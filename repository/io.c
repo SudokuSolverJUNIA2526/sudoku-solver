@@ -12,7 +12,7 @@ char loadGridFromFile(const char *path) {
     }
     FILE *f = fopen(path, "r");
     if (f == NULL) {
-        fprintf(stderr, "loadGridFromFile: impossible to open '%s'.\n", path);
+        fprintf(stderr, "loadGridFromFile: impossible to open '%s'. (Non existing path or mistyped ?)\n", path);
         return 0;
     }
     // remet la grille à zéro avant de la remplir

@@ -56,12 +56,7 @@ SubsetSolver -[dotted]-> SubsetGrid
 SubsetGrid -[dotted]->  SudokuTiles
 
 struct difficulty_t {
-    enum Difficulty
-    TRIVIAL
-    BASIC
-    INTERMEDIATE
-    HARD
-    EXPERT
+    unsigned short level
 }
 
 @enduml
