@@ -43,7 +43,7 @@ char loadGridFromFile(const char *path) {
         if (col > 9) { col = 1; row++; }
     }
     fclose(f);
-    printf("File %s successfully loaded.\n", path);
+    // fprintf(stdout, "File %s successfully loaded.\n", path);
     return 1;
 }
 

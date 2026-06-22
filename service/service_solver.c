@@ -93,6 +93,7 @@ char resolveGrid(void) {
         modified |= solveNakedSingles();
         modified |= solveHiddenSingles();
     } while (modified);
+    guessValue();
 
     // Vérifie si la grille est entièrement résolue
     for (int i = 0; i < GRID_SIZE; i++)

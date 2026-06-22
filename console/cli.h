@@ -7,12 +7,13 @@
 
 #include "io.h"
 #include "../entity/grid.h"
+#include "cli-internal.h"
 
 static void printHelp(const char *cmd);
 char cli();
 static void generateLevelHelp();
-unsigned short seedGen(unsigned short seed);
 char verbose();
+static void traceVerbose(int row, int col, char val, char supposed);
 char benchmark();
 char interactive();
 

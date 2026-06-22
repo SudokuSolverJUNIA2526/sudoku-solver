@@ -22,7 +22,7 @@ char generateGrid(difficulty_t level, unsigned int seed) {
     else
         srand(seed);
 
-    //grille de base valide (décalage circulaire)
+    //grille de base valide (décalage )
     int vals[9] = {1,2,3,4,5,6,7,8,9};
 
     // mélange de la ligne 1

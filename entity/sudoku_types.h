@@ -30,4 +30,6 @@ typedef struct {
     unsigned short difficulty;  // de 1 à 5
 } difficulty_t;
 
+extern char g_verbose;
+
 #endif //SUDOKUSOLVER_SUDOKU_TYPES_H

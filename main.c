@@ -5,6 +5,7 @@
 #include "../sudoku-solver/entity/sudoku_types.h"
 #include "../sudoku-solver/repository/io.h"
 #include "../sudoku-solver/entity/grid.h"
+#include "console/cli.h"
 #include "entity/generator.h"
 #include "entity/subset.h"
 #include "service/service_solver.h"
@@ -132,17 +133,17 @@ static void testSubset(void) {
 
 int main(void)
 {
-    printf("  Tests unitaires \n");
-
     /*
     testInitGrid();
     testSetTileValue();
     testDisp();
     testIoFile(); */
 
-    difficulty_t d;
-    d.difficulty = 5;
-    generateGrid(d, 1);
+    cli();
+
+    loadGridFromFile("filebase/sudoku_test.txt");
+    dispFinal();
+    resolveGrid();
     dispFinal();
 
     /*
@@ -154,6 +155,7 @@ int main(void)
     resolveGrid();
     dispFinal();
     isGridValid(); */
+
 
     printf("  \nResults : %d/%d passed", passed, run);
     if (failed > 0) {

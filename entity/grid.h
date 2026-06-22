@@ -6,6 +6,7 @@
 #define SUDOKUSOLVER_GRID_H
 
 #include "sudoku_types.h"
+#include "../console/cli-internal.h"
 
 void initGrid(void);                // initialize empty grid (all the values are unknown, all possible)
 void dispFinal(void);               // display grid and indicate only certain values. Empty tiles are displayed as a space " ". Displaying must clearly show limitations between each sub-squares.
@@ -26,5 +27,8 @@ void back_play(void);
 extern SudokuTiles grid[GRID_SIZE];
 extern Affectation history[HISTORY_SIZE];
 extern int  history_index;
+
+typedef void (*TraceCallback)(int row, int col, char val, char supposed);
+void setTraceCallback(TraceCallback callback);
 
 #endif //SUDOKUSOLVER_GRID_H

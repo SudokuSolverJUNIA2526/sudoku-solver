@@ -8,6 +8,12 @@ SudokuTiles grid[GRID_SIZE];
 Affectation history[HISTORY_SIZE];
 int         history_index = 0;
 
+static TraceCallback trace = NULL;
+
+void setTraceCallback(TraceCallback callback) {
+    trace = callback;
+}
+
 // remet la grille à zéro : toutes les cases sont inconnues et toutes les valeurs sont possibles
 // réinitialise aussi l'historique des affectations
 void initGrid(void) {
@@ -91,6 +97,13 @@ void setTileValue(SudokuTiles *t, char val, char supposed) {
         history[history_index].supposed = supposed;
         history[history_index].value    = val;
         history_index++;
+    }
+
+    // trace verbose si un callback est enregistre
+    if (trace) {
+        int row = (int)(t - grid) / 9 + 1;
+        int col = (int)(t - grid) % 9 + 1;
+        trace(row, col, val, supposed);
     }
 }
 

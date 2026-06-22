@@ -21,6 +21,13 @@ char cleanNakedPairs(void);
 char cleanHiddenPairs(void);
 char cleanNakedTriples(void);
 char cleanHiddenTriples(void);
+char cleanBoxLineReduction(void);
+char cleanPointingPairs(void);
+char cleanYWing(void);
+char cleanXWing(void);
+char cleanSwordfish(void);
+char cleanJellyfish(void);
+char cleanUniqueRectangle(void);
 
 char fixSubsets(Subset s);
 
