@@ -10,6 +10,9 @@
 #include "stdlib.h"
 #include "time.h"
 #include "../console/cli.h"
+
+#include <windows.h>
+
 #include "dirent.h"
 
 #include "../entity/generator.h"
@@ -146,6 +149,7 @@ char cli(void) {
                     "Unknown command: '%s'. Input -h for more infos.\n",
                     cmd);
         }
+        Sleep(1000);
     }
     return 0;
 }
