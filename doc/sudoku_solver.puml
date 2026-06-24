@@ -49,6 +49,13 @@ struct SubsetSolver {
     + fixSubsets(s)
     + dispSubset(s)
     + freeAllSubsets()
+    + cleanBoxLineReduction()
+    + cleanPointingPairs()
+    + cleanYWing()
+    + cleanXWing()
+    + cleanSwordfish()
+    + cleanJellyfish()
+    + cleanUniqueRectangle()
 }
 
 SubsetSolver -[dotted]-> SubsetGrid
@@ -58,5 +65,32 @@ SubsetGrid -[dotted]->  SudokuTiles
 struct difficulty_t {
     unsigned short level
 }
+
+struct Verbose {
+    char active;
+    long nb_deductions;
+    long nb_guesses;
+    long nb_backplays;
+}
+
+struct Cli {
+    static void printHelp(const char *cmd)
+    char cli()
+    static void generateLevelHelp()
+    char verbose()
+    static void traceVerbose(int row, int col, char val, char supposed)
+    char benchmark()
+    char interactive()
+}
+
+Cli -[dotted]-> Verbose
+Cli -[dotted]-> Grid
+
+struct Generate {
+    char generateGrid(difficulty_t level, unsigned int seed)
+}
+
+Generate -[dotted]-> difficulty_t
+Cli -[dotted]-> Generate
 
 @enduml

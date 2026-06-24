@@ -8,6 +8,10 @@
 #include "io.h"
 #include "../entity/grid.h"
 #include "cli-internal.h"
+#include "../entity/generator.h"
+#include "../repository/io.h"
+#include "../entity/sudoku_types.h"
+#include "../service/service_solver.h"
 
 static void printHelp(const char *cmd);
 char cli();
