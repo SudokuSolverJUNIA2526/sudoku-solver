@@ -1,61 +1,70 @@
 @startuml
 
-package entity {
-    file "generator.c"
-    file "generator.h"
-    file "generator-internal.h"
+    package entity {
+        file "generator.c"
+        file "generator.h"
+        file "generator-internal.h"
 
-    "generator.c" -[dotted]-> "generator-internal.h" : include
-    "generator-internal.h" -[dotted]-> "generator.h" : include
+        file "grid.c"
+        file "grid.h"
+        file "grid-internal.h"
 
-    file "grid.c"
-    file "grid.h"
-    file "grid-internal.h"
+        file "subset.c"
+        file "subset.h"
+        file "subset-internal.h"
 
-    "grid.c" -[dotted]-> "grid-internal.h" : include
-    "grid-internal.h" -[dotted]-> "grid.h" : include
+        file "sudoku_types.c"
+        file "sudoku_types.h"
+        file "sudoku_types-internal.h"
 
-    file "subset.c"
-    file "subset.h"
-    file "subset-internal.h"
+        "generator.h" -[dotted]-> "sudoku_types.h": include
+        "generator.c" -[dotted]-> "generator.h": include
 
-    "subset.c" -[dotted]-> "subset-internal.h" : include
-    "subset-internal.h" -[dotted]-> "subset.h" : include
+        "grid.h" -[dotted]-> "sudoku_types.h" : include
+        "grid.c" -[dotted]-> "grid.h" : include
+        "grid.c" -[dotted]-> "subset.h" : include
 
-    file "sudoku_types.c"
-    file "sudoku_types.h"
-    file "sudoku_types-internal.h"
+        "grid.c" -[dotted]-> "grid-internal.h" : include
+        "grid-internal.h" -[dotted]-> "grid.h" : include
 
-    "sudoku_types.c" -[dotted]-> "sudoku_types-internal.h" : include
-    "sudoku_types-internal.h" -[dotted]-> "sudoku_types.h" : include
+        "subset-internal.h" -[dotted]-> "sudoku_types.h" : include
+        "subset.h" -[dotted]-> "subset-internal.h" : include
+        "subset.c" -[dotted]-> "grid.h" : include
+        "subset.c" -[dotted]-> "subset.h" : include
 
-}
+        "sudoku_types-internal.h" -[dotted]-> "sudoku_types.h" : include
 
-package repository {
-    file "io.c"
-    file "io.h"
+    }
 
-    "io.c" -[dotted]-> "io.h" : include
-}
+    package repository {
+        file "io.c"
+        file "io.h"
 
-package service {
-    file "service_solver.c"
-    file "service_solver.h"
-    file "service_solver-internal.h"
+        "io.h" -[dotted]-> "grid.h" : include
+        "io.c" -[dotted]-> "io.h" : include
 
-    "service_solver.c" -[dotted]-> "service_solver-internal.h" : include
-    "service_solver-internal.h" -[dotted]-> "service_solver.h" : include
-    "service_solver.h" -[dotted]-> "io.h"
-}
+    }
 
-package console {
-    file "cli.h"
-    file "cli.c"
-    file "cli-internal.h"
+    package service {
+        file "service_solver.c"
+        file "service_solver.h"
 
-    "cli.c" -[dotted]-> "cli-internal.h" : include
-    "cli.c" -[dotted]-> "cli.h" : include
-    "cli-internal.h" -[dotted]-> "cli.h" : include
-}
+        "service_solver.h" -[dotted]-> "sudoku_types.h" : include
+        "service_solver.h" -[dotted]-> "subset.h" : include
+        "service_solver.c" -[dotted]-> "grid.h"
+        "service_solver.c" -[dotted]-> "subset.h"
+        "service_solver.c" -[dotted]-> "service_solver.h"
+    }
 
-@enduml
+    package console {
+        file "cli.h"
+        file "cli.c"
+
+        "cli.c" -[dotted]-> "cli.h" : include
+        "cli.c" -[dotted]-> "io.h" : include
+        "cli.h" -[dotted]-> "io.h" : include
+        "cli.h" -[dotted]-> "generator.h" : include
+        "cli.h" -[dotted]-> "grid.h" : include
+    }
+
+    @enduml

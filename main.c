@@ -13,8 +13,7 @@
 
 int main(void)
 {
-
-    testInit();
+    testInit();       // lance les tests
 
     cli();
 

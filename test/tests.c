@@ -344,13 +344,13 @@ static void testUniqueRectangle(void) {
         for (int d = 0; d < 9; d++)
             grid[i].possible[d] = 0;
 
-    /* (1,1) toit : {1,2} */
+    // (1,1) toit : {1,2}
     grid[0].possible[0] = 1; grid[0].possible[1] = 1;
-    /* (1,4) toit : {1,2} */
+    // (1,4) toit : {1,2}
     grid[3].possible[0] = 1; grid[3].possible[1] = 1;
-    /* (4,1) toit : {1,2} */
+    // (4,1) toit : {1,2}
     grid[27].possible[0] = 1; grid[27].possible[1] = 1;
-    /* (4,4) sol : {1,2,5} */
+    // (4,4) sol : {1,2,5}
     grid[30].possible[0] = 1; grid[30].possible[1] = 1;
     grid[30].possible[4] = 1;
 
@@ -390,7 +390,7 @@ static void testYWing(void) {
         for (int d = 0; d < 9; d++)
             grid[i].possible[d] = 0;
 
-    /* pivot (1,1) : {1,2} */
+    // pivot (1,1) : {1,2}
     grid[0].possible[0] = 1;
     grid[0].possible[1] = 1;
 
